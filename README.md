@@ -1,24 +1,11 @@
-# README
+# Enterprise Application Boilerplate (Rails API)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a boilerplate to help anyone to develop useful enterprise applications for businesses and SMEs. The boilerplate is in Rails 5 API.
 
-Things you may want to cover:
+## How to use this boilerplate?
 
-* Ruby version
+Work-in-Progress
 
-* System dependencies
+## Related Projects
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* [Frontend based on React](https://github.com/nthock/enterprise_react_boilerplate)
