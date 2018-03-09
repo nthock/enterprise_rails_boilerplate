@@ -3,10 +3,16 @@ class GraphqlController < ApplicationController
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
-    context = {
-      # Query context goes here, for example:
-      # current_user: current_user,
-    }
+    context = {}
+
+    if operation_name != 'authenticateUser'
+      if user.present?
+        context[:current_user] = user[0]
+      else
+        request_http_token_authentication and return
+      end
+    end
+
     result = BackendRailsSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
   end
@@ -30,4 +36,17 @@ class GraphqlController < ApplicationController
       raise ArgumentError, "Unexpected parameter: #{ambiguous_param}"
     end
   end
+
+  def current_user
+      if user.present?
+        user[0]
+      else
+        request_http_token_authentication and return
+      end
+    end
+
+    def user
+      hmac_secret = Rails.application.secrets.hmac_secret
+      authenticate_with_http_token { |t, _o| JWT.decode(t, hmac_secret, true, algorithm: 'HS256') }
+    end
 end
