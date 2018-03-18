@@ -5,7 +5,7 @@ class GraphqlController < ApplicationController
     operation_name = params[:operationName]
     context = {}
 
-    if operation_name != 'authenticateUser'
+    if operation_name != 'authenticateUser' && operation_name != 'createUser'
       if user.present?
         context[:current_user] = user[0]
       else
