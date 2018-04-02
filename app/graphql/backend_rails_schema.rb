@@ -1,7 +1,7 @@
 ErrorFormatter = Struct.new(:key, :value)
 
 BackendRailsSchema = GraphQL::Schema.define do
-  mutation(MutationType)
+  mutation(Types::MutationType)
   query(Types::QueryType)
 
   Types::ErrorType = GraphQL::ObjectType.define do

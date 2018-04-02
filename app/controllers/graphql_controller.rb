@@ -12,7 +12,7 @@ class GraphqlController < ApplicationController
         request_http_token_authentication and return
       end
     end
-
+    
     result = BackendRailsSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
   end

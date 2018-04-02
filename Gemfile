@@ -19,6 +19,7 @@ gem 'jwt'
 gem 'pdfkit'
 gem 'pg'
 gem 'puma', '~> 3.7'
+gem "pundit"
 gem 'rack-cors'
 gem 'rails', '~> 5.1.5'
 gem 'redis'
