@@ -19,6 +19,7 @@ RSpec.describe Invitation::AcceptService, type: :service do
       expect(user.invitation_accepted_at).to be_truthy
       expect(user.invitation_accepted).to be true
       expect(user.invitation_token).to be nil
+      expect(user.status).to eq 'active'
     end
   end
 

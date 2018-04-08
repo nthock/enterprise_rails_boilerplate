@@ -46,4 +46,19 @@ module UserMutations
       Invitation::AcceptService.new(inputs).update
     }
   end
+
+  SendInvite = GraphQL::Relay::Mutation.define do
+    name "SendInvite"
+
+    input_field :id, types.ID
+
+    return_type Types::UserType
+
+    resolve ->(_obj, inputs, ctx) {
+      user = User.find(inputs[:id])
+      return GraphQL::ExecutionError.new('Not authorised to send another invitation') unless ctx[:current_user]['id'] == user.invited_by_id
+      return GraphQL::ExecutionError.new("#{user.name} has already accepted the invitation") unless user.status == 'invited'
+      UserMailer.invitation(user).deliver_now
+    }
+  end
 end

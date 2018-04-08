@@ -16,6 +16,11 @@ RSpec.describe Invitation::CreateService, type: :service do
         expect(user.invitation_token).to_not be nil
       end
 
+      it 'should have a invited status set on the invited user' do
+        user = Invitation::CreateService.new(invitation_params, invited_by_id).invite
+        expect(user.status).to eq 'invited'
+      end
+
       it 'should call the UserMailer.invitation once' do
         delivery = double
         expect(delivery).to receive(:deliver_now)

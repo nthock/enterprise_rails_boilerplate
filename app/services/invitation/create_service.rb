@@ -13,6 +13,7 @@ class Invitation::CreateService
       invited_by_id: invited_by_id,
       invitation_created_at: DateTime.now,
       invitation_token: generate_token(User),
+      status: 'invited',
       admin: options[:admin]
     )
     user.skip_password_validation = true

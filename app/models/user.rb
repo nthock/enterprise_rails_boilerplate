@@ -7,6 +7,7 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   validates :invited_by_id, presence: true, if: :invited_user?
+  enum status: { active: 1, invited: 2 }
 
   private
 

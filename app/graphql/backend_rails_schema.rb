@@ -20,6 +20,7 @@ BackendRailsSchema = GraphQL::Schema.define do
     field :designation, types.String
     field :admin, types.Boolean
     field :super_admin, types.Boolean
+    field :status, types.String
     field :token, types.String do
       hmac_secret = Rails.application.secrets.hmac_secret
       resolve ->(obj, _args, _ctx) { JWT.encode(obj.as_json, hmac_secret, 'HS256') }

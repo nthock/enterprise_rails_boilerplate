@@ -13,6 +13,7 @@ class Invitation::AcceptService
       password_confirmation: accept_params[:password_confirmation],
       invitation_accepted_at: DateTime.now,
       invitation_accepted: true,
+      status: 'active',
       invitation_token: nil
     )
     user

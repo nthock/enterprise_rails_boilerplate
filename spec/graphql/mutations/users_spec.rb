@@ -75,6 +75,40 @@ RSpec.describe 'user mutations', type: :request do
     end
   end
 
+  describe 'send invitation' do
+    let!(:token) { generate_user_token(super_admin) }
+    let!(:headers) { { authorization: "Bearer #{token}" } }
+    let!(:operation_name) { "sendInvite" }
+    let!(:invitation_params) { { name: 'Test Name', email: 'testemail@example.com' } }
+    let!(:invited_user) { Invitation::CreateService.new(invitation_params, super_admin.id).invite }
+    let!(:query) do
+      %[
+        mutation sendInvite($id: ID) {
+          sendInvite(input: { id: $id }) {
+            id
+            name
+            email
+            designation
+            admin
+            super_admin
+            errors {
+              key
+              value
+            }
+          }
+        }
+      ]
+    end
+
+    it 'should send out a mailer' do
+      delivery = double
+      expect(delivery).to receive(:deliver_now)
+      expect(UserMailer).to receive(:invitation).once.and_return(delivery)
+
+      post '/graphql', params: { query: query, variables: { id: invited_user.id }, operationName: operation_name }, headers: headers
+    end
+  end
+
   describe 'Accept user invitation' do
     let!(:operation_name) { "acceptInvite" }
     let!(:invitation_params) { { name: 'Test Name', email: 'testemail@example.com' } }
