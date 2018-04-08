@@ -1,23 +1,21 @@
 require "rails_helper"
 
-RSpec.describe 'user queries', type: :request do
+RSpec.describe 'user mutations', type: :request do
   include Helpers
   let!(:user) { FactoryBot.create(:user) }
   let!(:admin) { FactoryBot.create(:admin) }
   let!(:super_admin) { FactoryBot.create(:super_admin) }
-  let!(:variables) do
-    { name: 'test admin',
-      email: 'testadmin@example.com',
-      password: 'password',
-      password_confirmation: 'password_confirmation' }
-  end
-  let!(:operation_name) { "addAdmin" }
 
   describe 'create_admins' do
+    let!(:operation_name) { "addAdmin" }
+    let!(:variables) do
+      { name: 'test admin',
+        email: 'testadmin@example.com' }
+    end
     let!(:query) do
       %[
-        mutation addAdmin($name: String, $email: String, $password: String, $password_confirmation: String) {
-          addAdmin(input: { name: $name, email: $email, password: $password, password_confirmation: $password_confirmation }) {
+        mutation addAdmin($name: String, $email: String) {
+          addAdmin(input: { name: $name, email: $email }) {
             id
             name
             email
@@ -74,6 +72,52 @@ RSpec.describe 'user queries', type: :request do
         expect(created_admin['email']).to eq variables[:email]
         expect(created_admin['super_admin']).to be false
       end
+    end
+  end
+
+  describe 'Accept user invitation' do
+    let!(:operation_name) { "acceptInvite" }
+    let!(:invitation_params) { { name: 'Test Name', email: 'testemail@example.com' } }
+    let!(:invited_user) { Invitation::CreateService.new(invitation_params, super_admin.id).invite }
+    let!(:variables) do
+      {
+        invitation_token: invited_user.invitation_token,
+        password: 'password',
+        password_confirmation: 'password'
+      }
+    end
+    let!(:query) do
+      %[
+        mutation acceptInvite($invitation_token: String, $password: String, $password_confirmation: String) {
+          acceptInvite(input: { invitation_token: $invitation_token, password: $password, password_confirmation: $password_confirmation }) {
+            id
+            name
+            email
+            designation
+            admin
+            super_admin
+            errors {
+              key
+              value
+            }
+          }
+        }
+      ]
+    end
+
+    it 'should return the invited user' do
+      post '/graphql', params: { query: query, variables: variables, operationName: operation_name }
+      user = JSON.parse(response.body)['data']['acceptInvite']
+      expect(user['name']).to eq 'Test Name'
+      expect(user['email']).to eq 'testemail@example.com'
+    end
+
+    it 'should update the user with invitation accepted' do
+      post '/graphql', params: { query: query, variables: variables, operationName: operation_name }
+      user = User.find_by(email: "testemail@example.com")
+      expect(user.encrypted_password).to be_truthy
+      expect(user.invitation_accepted_at).to be_truthy
+      expect(user.invitation_accepted).to be true
     end
   end
 end

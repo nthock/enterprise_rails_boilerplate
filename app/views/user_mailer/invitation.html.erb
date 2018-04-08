@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>Welcome welcome, <%= @user.name %></p>
+    <p>You can sign up for the application with this link:</p>
+    <p><%= "http://localhost:3000/invite?token=#{@user.invitation_token}" %></p>
+    <p>Thanks for joining and have a great day!</p>
+  </body>
+</html>

@@ -5,14 +5,14 @@ class GraphqlController < ApplicationController
     operation_name = params[:operationName]
     context = {}
 
-    if operation_name != 'authenticateUser' && operation_name != 'createUser'
+    if operation_name != 'authenticateUser' && operation_name != 'createUser' && operation_name != 'acceptInvite'
       if user.present?
         context[:current_user] = user[0]
       else
         request_http_token_authentication and return
       end
     end
-    
+
     result = BackendRailsSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
   end
