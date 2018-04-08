@@ -37,6 +37,14 @@ class GraphqlController < ApplicationController
     end
   end
 
+  def public_operations
+    [
+      'authenticateUser',
+      'createUser',
+      'acceptInvite'
+    ]
+  end
+
   def current_user
       if user.present?
         user[0]

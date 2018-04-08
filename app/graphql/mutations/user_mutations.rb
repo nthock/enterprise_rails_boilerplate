@@ -61,4 +61,33 @@ module UserMutations
       UserMailer.invitation(user).deliver_now
     }
   end
+
+  ForgetPassword = GraphQL::Relay::Mutation.define do
+    name "ForgotPassword"
+
+    input_field :email, types.String
+
+    return_type Types::UserType
+
+    resolve ->(_obj, inputs, _ctx) {
+      user = User.find_by(email: inputs[:email])
+      return GraphQL::ExecutionError.new('Not a valid user') if user.nil?
+      user.send_reset_password_request
+    }
+  end
+
+  ResetForgotPassword = GraphQL::Relay::Mutation.define do
+    name "ResetForgotPassword"
+
+    input_field :reset_password_token, types.String
+    input_field :password, types.String
+    input_field :password_confirmation, types.String
+
+    return_type Types::UserType
+
+    resolve ->(_obj, inputs, _ctx) {
+      user = User.find_by(reset_password_token: reset_password_token)
+      user.reset_password(inputs[:password], inputs[:password_confirmation])
+    }
+  end
 end
