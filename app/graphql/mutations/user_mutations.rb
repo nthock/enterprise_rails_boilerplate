@@ -63,7 +63,7 @@ module UserMutations
   end
 
   ForgetPassword = GraphQL::Relay::Mutation.define do
-    name "ForgotPassword"
+    name "ForgetPassword"
 
     input_field :email, types.String
 

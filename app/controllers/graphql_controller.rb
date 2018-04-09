@@ -4,8 +4,7 @@ class GraphqlController < ApplicationController
     query = params[:query]
     operation_name = params[:operationName]
     context = {}
-
-    if operation_name != 'authenticateUser' && operation_name != 'createUser' && operation_name != 'acceptInvite'
+    unless public_operations.include? operation_name
       if user.present?
         context[:current_user] = user[0]
       else
@@ -41,7 +40,9 @@ class GraphqlController < ApplicationController
     [
       'authenticateUser',
       'createUser',
-      'acceptInvite'
+      'acceptInvite',
+      'forgetPassword',
+      'resetForgotPassword'
     ]
   end
 

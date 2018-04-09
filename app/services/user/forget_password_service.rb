@@ -15,7 +15,7 @@ class User::ForgetPasswordService
   private
 
     def generate_reset_token
-      raw, enc = Devise.token_generator.generate(self.class, :reset_password_token)
+      raw, enc = Devise.token_generator.generate(User, :reset_password_token)
       user.update(
         reset_password_token: enc,
         reset_password_sent_at: DateTime.now
