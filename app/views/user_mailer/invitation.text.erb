@@ -2,6 +2,6 @@ Welcome to example.com, <%= @user.name %>
 ===============================================
 
 You can sign up for the application with this link:
-"http://localhost:3000/invite?token=<%= @user.invitation_token %>"
+<%= "http://localhost:3000/invite?token=#{@user.invitation_token}" %>
 
 Thanks for joining and have a great day!

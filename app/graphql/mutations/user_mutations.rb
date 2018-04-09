@@ -70,9 +70,7 @@ module UserMutations
     return_type Types::UserType
 
     resolve ->(_obj, inputs, _ctx) {
-      user = User.find_by(email: inputs[:email])
-      return GraphQL::ExecutionError.new('Not a valid user') if user.nil?
-      user.send_reset_password_request
+      User::ForgetPasswordService.new(inputs[:email]).generate
     }
   end
 
@@ -86,8 +84,7 @@ module UserMutations
     return_type Types::UserType
 
     resolve ->(_obj, inputs, _ctx) {
-      user = User.find_by(reset_password_token: reset_password_token)
-      user.reset_password(inputs[:password], inputs[:password_confirmation])
+      User::ResetPasswordService.new(inputs).reset_password_and_clear_token
     }
   end
 end
