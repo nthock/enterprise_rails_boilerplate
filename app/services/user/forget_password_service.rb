@@ -6,7 +6,7 @@ class User::ForgetPasswordService
   end
 
   def generate
-    return GraphQL::ExecutionError.new('Not a valid user') if user.nil?
+    return if user.nil?
     generate_reset_token
     UserMailer.reset_password(user.reload).deliver_now
     user
