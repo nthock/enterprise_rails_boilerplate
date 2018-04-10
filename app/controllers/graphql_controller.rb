@@ -4,8 +4,7 @@ class GraphqlController < ApplicationController
     query = params[:query]
     operation_name = params[:operationName]
     context = {}
-
-    if operation_name != 'authenticateUser' && operation_name != 'createUser' && operation_name != 'acceptInvite'
+    unless public_operations.include? operation_name
       if user.present?
         context[:current_user] = user[0]
       else
@@ -35,6 +34,16 @@ class GraphqlController < ApplicationController
     else
       raise ArgumentError, "Unexpected parameter: #{ambiguous_param}"
     end
+  end
+
+  def public_operations
+    [
+      'authenticateUser',
+      'createUser',
+      'acceptInvite',
+      'forgetPassword',
+      'resetForgotPassword'
+    ]
   end
 
   def current_user

@@ -7,4 +7,6 @@ Types::MutationType = GraphQL::ObjectType.define do
   field :addAdmin, field: UserMutations::AddAdmin.field
   field :acceptInvite, field: UserMutations::AcceptInvite.field
   field :sendInvite, field: UserMutations::SendInvite.field
+  field :forgetPassword, field: UserMutations::ForgetPassword.field
+  field :resetForgotPassword, field: UserMutations::ResetForgotPassword.field
 end

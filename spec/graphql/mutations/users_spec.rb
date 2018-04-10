@@ -154,4 +154,75 @@ RSpec.describe 'user mutations', type: :request do
       expect(user.invitation_accepted).to be true
     end
   end
+
+  describe 'Forget Password' do
+    let!(:operation_name) { "forgetPassword" }
+    let!(:variables) { { email: user.email } }
+    let!(:query) do
+      %[
+        mutation forgetPassword($email: String) {
+          forgetPassword(input: { email: $email }) {
+            id
+            name
+            email
+            errors {
+              key
+              value
+            }
+          }
+        }
+      ]
+    end
+
+    it 'should return the user' do
+      post '/graphql', params: { query: query, variables: variables, operationName: operation_name }
+      return_user = JSON.parse(response.body)['data']['forgetPassword']
+      expect(return_user['name']).to eq user.name
+      expect(return_user['email']).to eq user.email
+    end
+
+    it 'should call the User::ForgetPasswordService' do
+      expect_any_instance_of(User::ForgetPasswordService).to receive(:generate).once
+      post '/graphql', params: { query: query, variables: variables, operationName: operation_name }
+    end
+  end
+
+  describe 'Reset Forgot Password' do
+    let!(:operation_name) { "resetForgotPassword" }
+    let!(:forgot_password_user) { User::ForgetPasswordService.new(user.email).generate }
+    let!(:variables) do
+      {
+        reset_password_token: forgot_password_user.reset_password_token,
+        password: 'new_password',
+        password_confirmation: 'new_password'
+      }
+    end
+    let!(:query) do
+      %[
+        mutation resetForgotPassword($reset_password_token: String, $password: String, $password_confirmation: String) {
+          resetForgotPassword(input: { reset_password_token: $reset_password_token, password: $password, password_confirmation: $password_confirmation }) {
+            id
+            name
+            email
+            errors {
+              key
+              value
+            }
+          }
+        }
+      ]
+    end
+
+    it 'should return the user' do
+      post '/graphql', params: { query: query, variables: variables, operationName: operation_name }
+      return_user = JSON.parse(response.body)['data']['resetForgotPassword']
+      expect(return_user['name']).to eq user.name
+      expect(return_user['email']).to eq user.email
+    end
+
+    it 'should call the User::ForgetPasswordService' do
+      expect_any_instance_of(User::ResetPasswordService).to receive(:reset_password_and_clear_token).once
+      post '/graphql', params: { query: query, variables: variables, operationName: operation_name }
+    end
+  end
 end
