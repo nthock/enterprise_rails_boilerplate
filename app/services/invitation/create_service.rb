@@ -11,7 +11,7 @@ class Invitation::CreateService
       name: invitation_params[:name],
       email: invitation_params[:email],
       invited_by_id: invited_by_id,
-      invitation_created_at: DateTime.now,
+      invitation_created_at: Time.now,
       invitation_token: generate_token(User),
       status: 'invited',
       admin: options[:admin]

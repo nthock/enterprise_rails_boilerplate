@@ -11,7 +11,7 @@ class Invitation::AcceptService
     user.update(
       password: accept_params[:password],
       password_confirmation: accept_params[:password_confirmation],
-      invitation_accepted_at: DateTime.now,
+      invitation_accepted_at: Time.now,
       invitation_accepted: true,
       status: 'active',
       invitation_token: nil

@@ -1,0 +1,104 @@
+AllCops:
+  TargetRubyVersion: 2.3
+  Exclude:
+    - db/schema.rb
+    - 'vendor/**/*'
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'script/**/*'
+    - 'bin/**/*'
+    - 'spec/**/*'
+    - 'lib/tasks/**/*'
+
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+
+##################### Style ##################################
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/EmptyElse:
+  EnforcedStyle: empty
+
+Style/GuardClause:
+  MinBodyLength: 5
+
+Style/Documentation:
+  Enabled: false
+
+Layout/IndentationConsistency:
+  EnforcedStyle: rails
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Lambda:
+  Enabled: false
+
+Style/AndOr:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false
+
+Style/NumericLiterals:
+  MinDigits: 7
+
+Style/RedundantSelf:
+  Enabled: false
+
+Layout/MultilineOperationIndentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: false
+
+Layout/FirstParameterIndentation:
+  Enabled: false
+
+Layout/ClosingParenthesisIndentation:
+  Enabled: false
+
+##################### Lint ##################################
+
+Lint/UnderscorePrefixedVariableName:
+  Enabled: false
+
+Lint/UnusedMethodArgument:
+  Enabled: false
+
+##################### Metrics ##################################
+Metrics/AbcSize:
+  Max: 45
+
+Metrics/ClassLength:
+  Max: 200
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/LineLength:
+  Max: 160
+  Exclude:
+    - "db/migrate/*.rb"
+
+Metrics/MethodLength:
+  Max: 30
+  Exclude:
+    - "db/migrate/*.rb"
+
+Metrics/PerceivedComplexity:
+  Max: 8
+
+Metrics/BlockLength:
+  Exclude:
+    - "lib/**/*"
+    - "spec/**/*"
+    - "app/graphql/backend_rails_schema.rb"
+
+Performance/RedundantMatch:
+  Enabled: false

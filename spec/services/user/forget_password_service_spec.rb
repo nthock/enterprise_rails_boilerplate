@@ -21,9 +21,10 @@ RSpec.describe User::ForgetPasswordService, type: :service do
   end
 
   context 'invalid user' do
-    it 'should return GraphQL::ExecutionError' do
-      invalid_user = User::ForgetPasswordService.new("hello@hello.com").generate
-      expect(invalid_user.message).to eq 'Not a valid user'
+    it 'should should not call the UserMailer Reset Password mailer' do
+      expect(UserMailer).to receive(:reset_password).exactly(0).times
+
+      User::ForgetPasswordService.new("hello@hello.com").generate
     end
   end
 end

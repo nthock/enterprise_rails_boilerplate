@@ -26,7 +26,7 @@ Types::QueryType = GraphQL::ObjectType.define do
     resolve ->(_obj, args, _ctx) {
       hmac_secret = Rails.application.secrets.hmac_secret
       decoded = JWT.decode(args[:token], hmac_secret, true, algorithm: 'HS256')
-      user = User.find(decoded[0]['id'])
+      User.find(decoded[0]['id'])
     }
   end
 end

@@ -15,11 +15,10 @@ class User::ForgetPasswordService
   private
 
     def generate_reset_token
-      raw, enc = Devise.token_generator.generate(User, :reset_password_token)
+      _raw, enc = Devise.token_generator.generate(User, :reset_password_token)
       user.update(
         reset_password_token: enc,
-        reset_password_sent_at: DateTime.now
+        reset_password_sent_at: Time.now
       )
     end
-
 end
